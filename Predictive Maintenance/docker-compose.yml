@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    restart: always
+    ports:
+      - "1883:1883"
+    volumes:
+      - "/Users/TonyMench/Desktop/Predictive Maintenance/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf"
+    networks:
+      - mqtt_network
+
+  edge-simulator:
+    build: ./edge-simulator
+    depends_on:
+      - mosquitto
+      - influxdb
+    networks:
+      - mqtt_network
+
+  influxdb:
+    image: influxdb:latest
+    restart: always
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=sensor_data
+      - INFLUXDB_ADMIN_USER=user
+      - INFLUXDB_ADMIN_PASSWORD=password
+    networks:
+      - mqtt_network
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - mqtt_network
+
+networks:
+  mqtt_network:
+    driver: bridge
+
+volumes:
+  influxdb-data:
