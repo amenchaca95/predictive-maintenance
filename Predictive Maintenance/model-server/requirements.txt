@@ -1,0 +1,11 @@
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn==1.5.1
+keras
+tensorflow-cpu  # Si no usas GPU, mejor usa tensorflow-cpu
+influxdb-client  # Necesario para escribir en InfluxDB
+paho-mqtt  # Necesario para conectarse a MQTT
+requests  # Útil para futuras conexiones HTTP
+joblib
